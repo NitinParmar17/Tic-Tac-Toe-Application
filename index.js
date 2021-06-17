@@ -6,6 +6,7 @@ app.controller("myController", function ($scope, toaster) {
     $scope.board = [];
     duplicate = [];
     $scope.won = "";
+    value = "";
     symbol = "";
     moveCount = { X: 0, O: 0 };
 
@@ -36,7 +37,7 @@ app.controller("myController", function ($scope, toaster) {
         moveCount[value] += 1;
       }
 
-      if (moveCount[value] >= 5) {
+      if (moveCount[value] >= 3) {
         if (checkForWinner(x, y)) {
           if (value == symbol) {
             value = "Player 1";
