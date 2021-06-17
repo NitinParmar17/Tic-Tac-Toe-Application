@@ -36,7 +36,7 @@ app.controller("myController", function ($scope, toaster) {
         moveCount[value] += 1;
       }
 
-      if (moveCount[value] >= 3) {
+      if (moveCount[value] >= 5) {
         if (checkForWinner(x, y)) {
           if (value == symbol) {
             value = "Player 1";
