@@ -2,62 +2,53 @@ var app = angular.module("myApp", ["ngAnimate", "toaster"]);
 
 app.controller("myController", function ($scope, toaster) {
   onLoad();
+
   function onLoad() {
     $scope.board = [];
-    duplicate = [];
     $scope.won = "";
     value = "";
     symbol = "";
-    moveCount = { X: 0, O: 0 };
-
+    $scope.letter = "X";
+    moveCount = 0;
+    $scope.line = 0;
     $scope.startGame = false;
 
     for (let i = 0; i < 3; i++) {
       $scope.board[i] = [];
-      duplicate[i] = [];
     }
   }
 
   $scope.restart = function () {
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        $scope.board[i][j] = "";
-        duplicate[i][j] = "";
-      }
-    }
     onLoad();
-    $scope.letter = "";
+  };
+
+  $scope.start = function () {
+    if ($scope.letter) {
+      symbol = $scope.letter;
+      $scope.startGame = true;
+    }
   };
 
   $scope.nextPlay = function (x, y) {
+    value = $scope.letter;
     if ($scope.won === "") {
-      if (!duplicate[x][y]) {
+      if (!$scope.board[x][y]) {
         $scope.board[x][y] = value;
-        duplicate[x][y] = value;
-        moveCount[value] += 1;
+        moveCount += 1;
+
+        value == "X" ? ($scope.letter = "O") : ($scope.letter = "X");
       }
 
-      if (moveCount[value] >= 3) {
+      if (moveCount >= $scope.board.length) {
         if (checkForWinner(x, y)) {
-          if (value == symbol) {
-            value = "Player 1";
-          } else value = "Player 2";
+          value == symbol ? (value = "Player 1") : (value = "Player 2");
 
           $scope.won = value + " Won.";
-
-          $("#confirm").modal("show");
           toaster.pop("success", "Notification", $scope.won);
-        } else if (moveCount["X"] + moveCount["O"] === 9) {
+        } else if (moveCount === Math.pow($scope.board.length, 2)) {
           $scope.won = "It's a Tie";
-
           toaster.pop("success", "Notification", $scope.won);
-          $("#confirm").modal("show");
         }
-      }
-      if (value === "X") {
-        value = "O";
-      } else {
-        value = "X";
       }
     }
   };
@@ -73,49 +64,51 @@ app.controller("myController", function ($scope, toaster) {
       return false;
     }
   }
-  $scope.start = function () {
-    if ($scope.letter) {
-      value = $scope.letter;
-      symbol = value;
-      $scope.startGame = true;
-    }
-  };
-  $scope.newGame = function () {
-    $scope.restart();
-  };
 
   function checkRows(x) {
     let result = false;
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < $scope.board.length; i++) {
       if ($scope.board[x][i] !== value) {
         result = false;
         break;
       } else result = true;
     }
+    if (result == true) {
+      $scope.line = x + 1;
+    }
     return result;
   }
   function checkColumns(y) {
     let result = false;
-    for (let i = 0; i < 3; i++) {
+    for (let i = 0; i < $scope.board.length; i++) {
       if ($scope.board[i][y] !== value) {
         result = false;
         break;
       } else result = true;
     }
+    if (result == true) {
+      $scope.line = y + 4;
+    }
     return result;
   }
 
   function checkDiagnols() {
-    if (
-      ($scope.board[0][0] === value &&
-        $scope.board[1][1] === value &&
-        $scope.board[2][2] === value) ||
-      ($scope.board[0][2] === value &&
-        $scope.board[1][1] === value &&
-        $scope.board[2][0] === value)
-    ) {
-      return true;
+    let j = $scope.board.length - 1;
+    let d1 = 0;
+    let d2 = 0;
+    for (let i = 0; i < $scope.board.length; i++) {
+      if ($scope.board[i][i] === value) {
+        d1 = d1 + 1;
+      }
+      if ($scope.board[i][j - i] === value) {
+        d2 = d2 + 1;
+      }
     }
-    return false;
+    if (d1 == $scope.board.length || d2 == $scope.board.length) {
+      d1 == $scope.board.length ? ($scope.line = 7) : ($scope.line = 8);
+      return true;
+    } else {
+      return false;
+    }
   }
 });

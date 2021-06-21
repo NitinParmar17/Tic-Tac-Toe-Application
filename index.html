@@ -24,7 +24,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 
-
 <body>
     <nav class="navbar navbar-expand-lg">
         <h1>
@@ -36,37 +35,65 @@
         <div ng-app='myApp' ng-controller='myController'>
             <toaster-container toaster-options="{'time-out': 3000, 'close-button':true}"></toaster-container>
 
-
             <div class="instrct">
-                <form ng-show=!startGame name="myForm">
-                    <div class="form-group row">
-                        <div class="col-12">
-                            <h3 for="img">Pick a Symbol for Player 1</h3>
-                            <input type="radio" id="letter" name="letter" value="X" ng-model="letter" required="true" />
-                            <label for="male">X</label>
-                            <br />
-                            <input type="radio" id="letter" name="letter" value="O" ng-model="letter" required="true" />
-                            <label for="O"> O</label>
-                            <br>
+                <div>
+                    <form ng-show=!startGame name="myForm">
+                        <div class="form-group row">
+                            <div class="col-12">
+                                <h3 for="img">Pick a Symbol for Player 1</h3>
+                                <input type="radio" id="letter" name="letter" value="X" ng-model="letter"
+                                    required="true" checked="checked" />
+                                <label for="male">X</label>
+                                <br />
+                                <input type="radio" id="letter" name="letter" value="O" ng-model="letter"
+                                    required="true" />
+                                <label for="O"> O</label>
+                                <br>
 
-                            <button class="startBtn btn " ng-click="start()">Start The Game<i class="fas fa-play"
-                                    style="margin-left: 4px;" aria-hidden="true"></i></button>
-
+                                <button class="startBtn btn " ng-click="start()">Start The Game<i class="fas fa-play"
+                                        style="margin-left: 7px;" aria-hidden="true"></i></button>
+                            </div>
                         </div>
-                    </div>
-                </form>
-                <!-- Restart button -->
-                <div ng-show="startGame" class="resetBtn">
-                    <button class="restart btn " ng-click='restart()'>Restart<i class="fas fa-refresh"
-                            style="margin-left: 4px;" aria-hidden="true"></i></button>
+                    </form>
+                    <h1>{{won}}</h1>
                 </div>
             </div>
 
-
             <div class="game">
+                <!-- ROWS -->
+                <svg ng-show="line==1">
+                    <line x1="0" y1="48" x2="290" y2="48" />
+                </svg>
+                <svg ng-show="line==2">
+                    <line x1="0" y1="148" x2="290" y2="148" />
+                </svg>
+                <svg ng-show="line==3">
+                    <line x1="0" y1="248" x2="290" y2="248" />
+                </svg>
+
+                <!-- COLUMNS -->
+                <svg ng-show="line==4">
+                    <line x1="45" y1="0" x2="45" y2="290" />
+                </svg>
+                <svg ng-show="line==5">
+                    <line x1="145" y1="0" x2="145" y2="290" />
+                </svg>
+                <svg ng-show="line==6">
+                    <line x1="245" y1="0" x2="245" y2="290" />
+                </svg>
+
+                <!-- DIAGONALS -->
+                <svg ng-show="line==7">
+                    <line x1="0" y1="0" x2="290" y2="290" />
+                </svg>
+                <svg ng-show="line==8">
+                    <line x1="290" y1="0" x2="0" y2="290" />
+                </svg>
+
                 <!-- Game Board -->
-                <table ng-show="startGame">
+                <table ng-show="startGame" ng-class="[lineThrough]">
                     <tbody>
+
                         <tr>
                             <td ng-click='nextPlay(0,0)'>{{board[0][0]}}</td>
                             <td ng-click='nextPlay(0,1)'>{{board[0][1]}}</td>
@@ -82,40 +109,21 @@
                             <td ng-click='nextPlay(2,1)'>{{board[2][1]}}</td>
                             <td ng-click='nextPlay(2,2)'>{{board[2][2]}}</td>
                         </tr>
-                    </tbody>
 
+                    </tbody>
                 </table>
                 <br>
 
             </div>
 
-            <!-- MODAL FOR RESULT AND CONFIRMATION -->
-            <div class="modal fade" id="confirm">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h3 class="modal-title">
-                                {{won}}
-                            </h3>
-                            <button type="button" class="close" data-dismiss="modal" style="color: white;">
-                                &times;
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <h4>Would you like to Play Again ?</h4>
-
-
-                        </div>
-                        <div class="modal-footer">
-                            <div>
-                                <button class="btn btn-success" data-dismiss="modal" ng-click="newGame()">Yes</button>
-                                <button class="btn btn-danger" data-dismiss="modal" ng-click="newGame()">No</button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
+            <!-- Restart button -->
+            <div ng-show="startGame" class="resetBtn">
+                <button class="restart btn " ng-click='restart()'>
+                    Restart
+                    <i class="fas fa-refresh" style="margin-left: 5px;" aria-hidden="true"></i>
+                </button>
             </div>
+
         </div>
     </div>
     <script src="index.js"></script>
