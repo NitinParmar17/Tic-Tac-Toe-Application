@@ -10,11 +10,13 @@ app.controller("myController", function ($scope, toaster) {
     symbol = "";
     $scope.letter = "X";
     moveCount = 0;
-    $scope.line = 0;
     $scope.startGame = false;
 
     for (let i = 0; i < 3; i++) {
       $scope.board[i] = [];
+      $scope["col" + i] = false;
+      $scope["row" + i] = false;
+      $scope["diag" + i] = false;
     }
   }
 
@@ -74,7 +76,7 @@ app.controller("myController", function ($scope, toaster) {
       } else result = true;
     }
     if (result == true) {
-      $scope.line = x + 1;
+      $scope["row" + x] = true;
     }
     return result;
   }
@@ -87,7 +89,7 @@ app.controller("myController", function ($scope, toaster) {
       } else result = true;
     }
     if (result == true) {
-      $scope.line = y + 4;
+      $scope["col" + y] = true;
     }
     return result;
   }
@@ -105,7 +107,8 @@ app.controller("myController", function ($scope, toaster) {
       }
     }
     if (d1 == $scope.board.length || d2 == $scope.board.length) {
-      d1 == $scope.board.length ? ($scope.line = 7) : ($scope.line = 8);
+      d1 == $scope.board.length ? ($scope.diag1 = true) : ($scope.diag2 = true);
+
       return true;
     } else {
       return false;
